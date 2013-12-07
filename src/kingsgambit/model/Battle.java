@@ -25,8 +25,8 @@ public class Battle implements CommandExecutor {
 		
 		movingPlayer.spendMoves(c.getCost());
 		
-		// Check for end of turn event
-		if (movingPlayer.getMovesLeft() == 0)
+		// Check for end of turn due to spending all moves allowed
+		if (!(c instanceof EndTurnCommand) && movingPlayer.getMovesLeft() == 0)
 			endTurn();
 	}
 	

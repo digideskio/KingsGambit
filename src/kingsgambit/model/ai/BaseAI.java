@@ -10,8 +10,10 @@ import kingsgambit.model.command.EndTurnCommand;
 public abstract class BaseAI implements AI {
 	public void makeMoves() {
 		List<Command> allCommands = player.getLegalCommands();
-		if (allCommands.size() == 0)
+		if (allCommands.size() == 0) {
+			System.out.println(player + " AI must pass");
 			controller.executeCommandSynchronous(new EndTurnCommand());
+		}
 		
 		controller.executeCommandSynchronous(bestMove());
 		

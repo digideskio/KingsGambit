@@ -58,13 +58,13 @@ public class TitleScreen extends JFrame {
 
 		newGame.add(new JLabel("Red Player:"));
 		final JComboBox<PlayerControlOption> redOptions = new JComboBox<PlayerControlOption>(
-				new PlayerControlOption[]{PlayerControlOption.HUMAN}
+				PlayerControlOption.values()
 		);
 		newGame.add(redOptions);
 
 		newGame.add(new JLabel("Blue Player:"));
 		final JComboBox<PlayerControlOption> blueOptions = new JComboBox<PlayerControlOption>(
-				new PlayerControlOption[]{PlayerControlOption.EASY}
+				new PlayerControlOption[] {PlayerControlOption.EASY}
 		);
 		newGame.add(blueOptions);
 
@@ -88,10 +88,17 @@ public class TitleScreen extends JFrame {
 		newGame.setVisible(true);
 	}
 	
-	private void startGame(PlayerControlOption red, PlayerControlOption blue) {
-		BattleParameters parameters = new BattleParameters(red, blue);
-		BattleController controller = new BattleController(parameters);
-		BattleView view = new BattleView(controller);
-		controller.setView(view);
+	private void startGame(final PlayerControlOption red, final PlayerControlOption blue) {
+		new Thread(
+			new Runnable() {
+				public void run() {
+					BattleParameters parameters = new BattleParameters(red, blue);
+					BattleController controller = new BattleController(parameters);
+					BattleView view = new BattleView(controller);
+					controller.setView(view);
+					controller.getBattle().begin();
+				}
+			}
+		).start();
 	}
 }

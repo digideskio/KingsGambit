@@ -11,7 +11,7 @@ public class BeginTurnEvent implements GameEvent {
 	}
 
 	public String toString() {
-		return "BeginTurnEvent";
+		return "BeginTurnEvent(" + faction + ")";
 	}
 	
 	

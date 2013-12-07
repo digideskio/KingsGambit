@@ -71,9 +71,8 @@ public class BattleController {
 	}
 
 	private void addAI(Faction f, PlayerControlOption option) {
-		System.out.println("Adding an AI for " + f);
 		// TODO generate the AI at an appropriate difficulty level
-		factionAIs.put(f, new SimpleAI(this, battle.getBlue()));
+		factionAIs.put(f, new SimpleAI(this, battle.getPlayer(f)));
 	}
 
 	private Battle battle;
