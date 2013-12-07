@@ -4,11 +4,14 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 
 import jmotion.AnimationFactory;
+import jmotion.animation.ActionAnimation;
 import jmotion.animation.Animation;
 import jmotion.animation.AnimationSequence;
 import jmotion.animation.FrameSet;
 import jmotion.animation.PlayFramesAnimation;
+import jmotion.sprite.Sprite;
 import jmotion.sprite.SpriteSpace;
+import jmotion.sprite.StaticSprite;
 import kingsgambit.model.Direction;
 import kingsgambit.model.event.AttackEvent;
 import kingsgambit.model.event.PieceMoveEvent;
@@ -45,8 +48,18 @@ public class SinglePieceSprite implements PieceSprite {
 		Point center = view.getSquareCenter(retreat.to.row, retreat.to.column);
 		Point destination = new Point(center.x + xDisplacement, center.y + yDisplacement);
 		return new AnimationSequence(
+			new ActionAnimation() {
+				public void action() {
+					setPanic(true);
+				}
+			},
 			new TurnAnimation(this, Direction.between(retreat.from, retreat.to)),
-			new WalkAnimation(this, new Point(x, y), destination, view, 6)
+			new WalkAnimation(this, new Point(x, y), destination, view, 6),
+			new ActionAnimation() {
+				public void action() {
+					setPanic(false);
+				}
+			}
 		);
 	}
 	
@@ -73,6 +86,10 @@ public class SinglePieceSprite implements PieceSprite {
 		return effectAnimation;
 	}
 	
+	public void setPanic(boolean panic) {
+		isPanic = panic;
+	}
+	
 	public Animation die() {
 		return new DieAnimation(piece, this, view);
 	}
@@ -91,6 +108,8 @@ public class SinglePieceSprite implements PieceSprite {
 		if (effect != null)
 			g.drawImage(effect.currentFrame(), x-effect.getWidth()/2, y-effect.getHeight(), null);
 			
+		if (isPanic)
+			panicEffect.render(g);
 	}
 
 	public void setLocation(int x, int y) {
@@ -100,6 +119,7 @@ public class SinglePieceSprite implements PieceSprite {
 
 	public void move(int deltaX, int deltaY) {
 		space.moveSprite(this, deltaX, deltaY);
+		panicEffect.setLocation(panicEffect.getX()+deltaX, panicEffect.getY()+deltaY);
 	}
 
 	public void moveTo(int x, int y) {
@@ -139,6 +159,9 @@ public class SinglePieceSprite implements PieceSprite {
 		x = center.x;
 		y = center.y;
 		space.addSprite(this);
+
+		panicEffect = new StaticSprite("assets/panic.gif");
+		panicEffect.setLocation(x-panicEffect.getWidth()/2, y-frames.getHeight()-panicEffect.getHeight());
 	}
 
 	protected SinglePieceSprite(Piece piece, BoardView view, SpriteSpace space, int xDisplacement, int yDisplacement) {
@@ -170,4 +193,6 @@ public class SinglePieceSprite implements PieceSprite {
 
 	private FrameSet effect;
 	private Animation effectAnimation;
+	private boolean isPanic;
+	private Sprite panicEffect;
 }
