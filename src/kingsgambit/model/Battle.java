@@ -122,8 +122,8 @@ public class Battle implements CommandExecutor {
 		controller.handle(new BeginTurnEvent(Faction.RED));
 	}
 	
-	public Battle(BattleParameters parameters) {		
-		board = BoardFactory.getBoard(BattleType.STANDARD);
+	public Battle(BattleParameters parameters) {
+		board = BoardFactory.getBoard();
 		
 		red = new Player(Faction.RED, board, 2);
 		blue = new Player(Faction.BLUE, board, 2);

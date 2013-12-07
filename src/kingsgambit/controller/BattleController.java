@@ -4,8 +4,11 @@ import java.util.HashMap;
 
 import jmotion.animation.Animation;
 import kingsgambit.model.Battle;
+import kingsgambit.model.BattleParameters;
 import kingsgambit.model.Faction;
+import kingsgambit.model.PlayerControlOption;
 import kingsgambit.model.ai.AI;
+import kingsgambit.model.ai.SimpleAI;
 import kingsgambit.model.command.Command;
 import kingsgambit.model.event.BeginTurnEvent;
 import kingsgambit.model.event.GameEvent;
@@ -51,21 +54,28 @@ public class BattleController {
 		return battle;
 	}
 	
-	public void setAI(Faction f, AI ai) {
-		factionAIs.put(f, ai);
-	}
-
 	public void setView(BattleView view) {
 		this.view = view;
 	}
 	
-	public BattleController(Battle battle) {
-		this.battle = battle;
+	public BattleController(BattleParameters parameters) {
+		battle = new Battle(parameters);
 		battle.setController(this);
 		
 		factionAIs = new HashMap<Faction, AI>();
+
+		if (parameters.redPlayerOption != PlayerControlOption.HUMAN)
+			addAI(Faction.RED, parameters.redPlayerOption);
+		if (parameters.bluePlayerOption != PlayerControlOption.HUMAN)
+			addAI(Faction.BLUE, parameters.bluePlayerOption);
 	}
-	
+
+	private void addAI(Faction f, PlayerControlOption option) {
+		System.out.println("Adding an AI for " + f);
+		// TODO generate the AI at an appropriate difficulty level
+		factionAIs.put(f, new SimpleAI(this, battle.getBlue()));
+	}
+
 	private Battle battle;
 	private BattleView view;
 	private HashMap<Faction, AI> factionAIs;
