@@ -10,7 +10,7 @@ public class BattleViewTest {
 		BattleParameters parameters = new BattleParameters(PlayerControlOption.HUMAN, PlayerControlOption.EASY);
 		BattleController controller = new BattleController(parameters);
 
-		BattleView battleView = new BattleView(controller);
+		BattleView battleView = new BattleView(controller, true, false);
 		controller.setView(battleView);
 		
 		controller.getBattle().begin();

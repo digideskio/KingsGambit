@@ -64,11 +64,11 @@ public class BattleView extends JFrame {
 		} else if (event instanceof BeginTurnEvent) {
 			Animation banner;
 			if (((BeginTurnEvent)event).faction == Faction.BLUE) {
-				state = ENEMY_TURN;
-				banner = enemyTurn.displayAndPlay();
+				state = controlBlue ? UNSELECTED : ENEMY_TURN;
+				banner = blueTurn.displayAndPlay();
 			} else {
-				state = UNSELECTED;
-				banner = yourTurn.displayAndPlay();
+				state = controlRed ? UNSELECTED : ENEMY_TURN;
+				banner = redTurn.displayAndPlay();
 			}
 			boardView.addAnimation(banner);
 			return banner;
@@ -89,8 +89,10 @@ public class BattleView extends JFrame {
 		state.tick();
 	}
 	
-	public BattleView(BattleController controller) {
+	public BattleView(BattleController controller, boolean controlRed, boolean controlBlue) {
 		this.controller = controller;
+		this.controlBlue = controlBlue;
+		this.controlRed = controlRed;
 		battle = controller.getBattle();
 		boardView = new BoardView(controller.getBattle().getBoard(), this);
 		diceView = new DiceView();
@@ -104,7 +106,7 @@ public class BattleView extends JFrame {
 		setVisible(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		state = UNSELECTED;
+		state = ENEMY_TURN;
 		
 		boardView.addMouseListener(new MouseListener() {
 			public void mouseReleased(MouseEvent e) {
@@ -132,11 +134,11 @@ public class BattleView extends JFrame {
 				enemyTurnFrames.addFrame(0, enemyTurnImg);
 			}
 
-			yourTurn = new Banner(yourTurnFrames, boardView.getBannerLayer());
-			yourTurn.setLocation((boardView.getWidth()-yourTurnFrames.getWidth())/2, 
+			redTurn = new Banner(yourTurnFrames, boardView.getBannerLayer());
+			redTurn.setLocation((boardView.getWidth()-yourTurnFrames.getWidth())/2, 
 					(boardView.getHeight()-yourTurnFrames.getHeight())/2);
-			enemyTurn = new Banner(enemyTurnFrames, boardView.getBannerLayer());
-			enemyTurn.setLocation(yourTurn.getX(), yourTurn.getY());
+			blueTurn = new Banner(enemyTurnFrames, boardView.getBannerLayer());
+			blueTurn.setLocation(redTurn.getX(), redTurn.getY());
 		} catch (IOException io) {
 		}
 		
@@ -180,11 +182,15 @@ public class BattleView extends JFrame {
 				if (clickedPiece == selectedPiece) {
 					UNSELECTED.enterState();
 				} else {
-					selectedPiece = clickedPiece; 
-					if (selectedPiece.getFaction() == Faction.RED)
+					if (clickedPiece.getFaction() == selectedPiece.getFaction()) {
+						// same faction, still the enemy
+						selectedPiece = clickedPiece;
+						enterState();
+					} else {
+						// opposite faction, must be the player
+						selectedPiece = clickedPiece;
 						SELECTED.enterState();
-					else
-						ENEMY_SELECTED.enterState();
+					}
 				}
 			}
 		}
@@ -201,7 +207,8 @@ public class BattleView extends JFrame {
 		public void squareClicked(Square s) {
 			if (controller.getBattle().getBoard().hasPieceAt(s)) {
 				selectedPiece = controller.getBattle().getBoard().getPieceAt(s);
-				if (selectedPiece.getFaction() == Faction.RED)
+				Faction movingFaction = controller.getBattle().getMovingPlayer().faction;
+				if (selectedPiece.getFaction() == movingFaction)
 					SELECTED.enterState();
 				else
 					ENEMY_SELECTED.enterState();
@@ -237,7 +244,8 @@ public class BattleView extends JFrame {
 						UNSELECTED.enterState();
 					} else {
 						selectedPiece = clicked;	
-						if (clicked.getFaction() == Faction.RED)
+						Faction movingFaction = controller.getBattle().getMovingPlayer().faction;
+						if (clicked.getFaction() == movingFaction)
 							SELECTED.enterState();
 						else
 							ENEMY_SELECTED.enterState();
@@ -263,6 +271,9 @@ public class BattleView extends JFrame {
 		};
 	}
 	
+	private boolean controlRed;
+	private boolean controlBlue;
+	
 	private Piece selectedPiece;
 	
 	private ViewState state;
@@ -272,6 +283,6 @@ public class BattleView extends JFrame {
 	private BoardView boardView;
 	private DiceView diceView;
 	
-	private Banner yourTurn;
-	private Banner enemyTurn;
+	private Banner redTurn;
+	private Banner blueTurn;
 }

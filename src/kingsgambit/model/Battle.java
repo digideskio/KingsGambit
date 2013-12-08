@@ -101,6 +101,10 @@ public class Battle implements CommandExecutor {
 		return f == Faction.RED ? red : blue;
 	}
 	
+	public Player getMovingPlayer() {
+		return movingPlayer;
+	}
+	
 	public boolean isGameOver() {
 		return redKing.isDead() || blueKing.isDead();
 	}
