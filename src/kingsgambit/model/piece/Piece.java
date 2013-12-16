@@ -3,10 +3,10 @@ package kingsgambit.model.piece;
 import java.util.LinkedList;
 import java.util.List;
 
-import kingsgambit.model.Board;
 import kingsgambit.model.Direction;
 import kingsgambit.model.Faction;
 import kingsgambit.model.Square;
+import kingsgambit.model.battle.Board;
 import kingsgambit.model.command.Command;
 import kingsgambit.model.command.MovePieceCommand;
 import kingsgambit.model.command.TurnPieceCommand;
@@ -121,6 +121,7 @@ public class Piece {
 		this.ability = ability;
 		this.speed = speed;
 		properties = new LinkedList<PieceProperty>();
+		position = new Square(0, 0);
 	}
 	
 	protected final String type;

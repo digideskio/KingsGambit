@@ -1,7 +1,7 @@
 package kingsgambit.view.battle;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.FlowLayout;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -16,12 +16,17 @@ import jmotion.animation.Animation;
 import jmotion.animation.AnimationSequence;
 import jmotion.animation.FrameSet;
 import kingsgambit.controller.BattleController;
-import kingsgambit.model.Battle;
 import kingsgambit.model.Faction;
 import kingsgambit.model.Player;
 import kingsgambit.model.Square;
+import kingsgambit.model.battle.Battle;
+import kingsgambit.model.battle.BattleConfiguration;
+import kingsgambit.model.battle.Board;
 import kingsgambit.model.command.Command;
+import kingsgambit.model.command.FactionReadyCommand;
+import kingsgambit.model.command.PlacePieceCommand;
 import kingsgambit.model.event.AttackEvent;
+import kingsgambit.model.event.BattleBeginEvent;
 import kingsgambit.model.event.BeginTurnEvent;
 import kingsgambit.model.event.GameEvent;
 import kingsgambit.model.piece.Piece;
@@ -41,7 +46,6 @@ public class BattleView extends JFrame {
 				}
 				public void start() {
 					boardView.highlight(attack.attacker.getPosition(), Color.RED);
-					boardView.highlight(attack.defender.getPosition(), Color.RED);
 				}
 				public boolean isFinished() {
 					return true;
@@ -72,6 +76,16 @@ public class BattleView extends JFrame {
 			}
 			boardView.addAnimation(banner);
 			return banner;
+		} else if (event instanceof BattleBeginEvent) {
+			// The battle is starting, we must ready each player controlled by this view
+			if (!battle.getConfiguration().requiresPlacementPhase()) {
+				System.out.println(controlBlue);
+				if (controlRed)
+					controller.executeCommand(new FactionReadyCommand(Faction.RED));
+				if (controlBlue)
+					controller.executeCommand(new FactionReadyCommand(Faction.BLUE));
+			}
+			return null;
 		} else {
 			Animation a = boardView.getAnimation(event);
 			boardView.addAnimation(a);
@@ -82,13 +96,26 @@ public class BattleView extends JFrame {
 	
 	public void advanceFrame(int millis) {
 		Point p = boardView.getMousePosition();		
-		if (clicked)
+		if (clicked) {
+			System.out.println("Clicked " + state);
 			state.squareClicked(boardView.getSquareForPoint(p));
+		}
 		clicked = false;
 		
 		state.tick();
 	}
 	
+	public void placementDone(Faction f) {		
+		// Do we need to place for next human player?
+		if (f == Faction.RED && controlBlue) {
+			remove(placePieces);
+			preparePlacement(Faction.BLUE);
+		} else {
+			beginGame();
+		}
+		controller.executeCommand(new FactionReadyCommand(f));
+	}
+
 	public BattleView(BattleController controller, boolean controlRed, boolean controlBlue) {
 		this.controller = controller;
 		this.controlBlue = controlBlue;
@@ -99,14 +126,11 @@ public class BattleView extends JFrame {
 
 		setSize(800, 800);
 		setLocationRelativeTo(null);
-		getContentPane().setLayout(new FlowLayout());
-		getContentPane().add(boardView);
-		getContentPane().add(diceView);
+		getContentPane().setLayout(new BorderLayout());
+		getContentPane().add(boardView, BorderLayout.CENTER);
 		
 		setVisible(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
-		state = ENEMY_TURN;
 		
 		boardView.addMouseListener(new MouseListener() {
 			public void mouseReleased(MouseEvent e) {
@@ -142,7 +166,35 @@ public class BattleView extends JFrame {
 		} catch (IOException io) {
 		}
 		
+		if (battle.getConfiguration().requiresPlacementPhase()) {
+			// If this battle configuration requires pieces to be placed,
+			// prepare to receive piece placements for the first player this view controls
+			if (controlRed)
+				preparePlacement(Faction.RED);
+			else if (controlBlue)
+				preparePlacement(Faction.BLUE);
+		} else {
+			beginGame();
+		}
+		
 		boardView.startAnimating();
+	}
+	
+	private void preparePlacement(Faction f) {
+		placingFor = f;
+		placePieces = new PlacePiecesPanel(this, controller.getBattle().getConfiguration(), f);
+		getContentPane().add(placePieces, BorderLayout.EAST);
+		getContentPane().revalidate();
+		state = PLACE_PIECE;
+	}
+	
+	private void beginGame() {
+		if (placePieces != null)
+			getContentPane().remove(placePieces);
+		
+		getContentPane().add(diceView, BorderLayout.EAST);
+		state = ENEMY_TURN;
+		getContentPane().revalidate();
 	}
 
 	private abstract class ViewState {
@@ -154,7 +206,11 @@ public class BattleView extends JFrame {
 	}
 	
 	private final ViewState ENEMY_TURN = new ViewState() {
+		public String toString() {
+			return "ENEMY_TURN";
+		}
 		public void enterState() {
+			state = this;
 			boardView.selectPiece(null);
 			boardView.clearPreviews();
 			boardView.clearHighlights();
@@ -165,6 +221,9 @@ public class BattleView extends JFrame {
 	};
 
 	private final ViewState ENEMY_SELECTED = new ViewState() {
+		public String toString() {
+			return "ENEMY_SELECTED";
+		}
 		public void enterState() {
 			System.out.println("entering ENEMY_SELECTED");
 			boardView.clearHighlights();
@@ -197,6 +256,9 @@ public class BattleView extends JFrame {
 	};
 	
 	private final ViewState UNSELECTED = new ViewState() {
+		public String toString() {
+			return "UNSELECTED";
+		}
 		public void enterState() {
 			state = this;
 			selectedPiece = null;
@@ -217,6 +279,9 @@ public class BattleView extends JFrame {
 	};
 	
 	private final ViewState SELECTED = new ViewState() {
+		public String toString() {
+			return "SELECTED";
+		}
 		public void enterState() {
 			boardView.clearHighlights();
 			boardView.clearPreviews();
@@ -255,24 +320,55 @@ public class BattleView extends JFrame {
 		}
 	};
 	
+	private final ViewState PLACE_PIECE = new ViewState() {
+		public String toString() {
+			return "PLACE_PIECE";
+		}
+		
+		public void squareClicked(Square s) {
+			Board board = battle.getBoard();
+			if (placePieces.hasMorePieces() && board.containsSquare(s) && !board.hasPieceAt(s)) {
+				BattleConfiguration config = battle.getConfiguration();
+				
+				if ((placingFor == Faction.RED && config.getRedRegion().contains(s))
+						|| (placingFor == Faction.BLUE && config.getBlueRegion().contains(s))) {
+					Piece piece = placePieces.getSelected();
+					placePieces.placePiece();
+					controller.executeCommand(new PlacePieceCommand(piece, s));
+				}
+			}
+		}
+		
+		public void enterState() {
+			state = this;
+		}
+	};
+	
 	private ViewState getWaitingState(final Animation a, final ViewState transitionTo) {
 		return new ViewState() {
+			public String toString() {
+				return "TRANSITION(" + a + ", " + transitionTo + ")";
+			}
 			public void enterState() {
+				System.out.println("transitioning to " + transitionTo);
 				state = this;
+				if (a == null)
+					transitionTo.enterState();
 			}
 
 			public void squareClicked(Square s) {
 			}
 			
 			public void tick() {
-				if (a.isFinished())
+				if (a == null || a.isFinished())
 					transitionTo.enterState();
 			}
 		};
-	}
+	} 
 	
 	private boolean controlRed;
 	private boolean controlBlue;
+	private Faction placingFor;
 	
 	private Piece selectedPiece;
 	
@@ -282,6 +378,7 @@ public class BattleView extends JFrame {
 	private Battle battle;
 	private BoardView boardView;
 	private DiceView diceView;
+	private PlacePiecesPanel placePieces;
 	
 	private Banner redTurn;
 	private Banner blueTurn;

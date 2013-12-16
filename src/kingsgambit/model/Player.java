@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
+import kingsgambit.model.battle.Board;
 import kingsgambit.model.command.Command;
 import kingsgambit.model.piece.Piece;
 

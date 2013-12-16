@@ -2,9 +2,9 @@ package kingsgambit.model.piece;
 
 import java.util.LinkedList;
 
-import kingsgambit.model.Board;
 import kingsgambit.model.Square;
 import kingsgambit.model.WeaponDieFace;
+import kingsgambit.model.battle.Board;
 import kingsgambit.model.command.AttackPieceCommand;
 import kingsgambit.model.command.Command;
 

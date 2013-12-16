@@ -1,10 +1,13 @@
-package kingsgambit.model;
+package kingsgambit.model.battle;
 
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import kingsgambit.model.Direction;
+import kingsgambit.model.Faction;
+import kingsgambit.model.Square;
 import kingsgambit.model.piece.Piece;
 
 public class Board {
@@ -168,13 +171,16 @@ public class Board {
 		return false;
 	}
 	
-	public Board(int width, int height) {
+	public Board(int width, int height, BattleConfiguration config) {
 		this.width = width;
 		this.height = height;
 		
 		board = new Piece[width][height];
 		pieces = new HashSet<Piece>();
 		factionPieces = new HashMap<Faction, HashSet<Piece>>();
+		
+		for (Piece p : config.getInitialPieces())
+			addPiece(p);
 	}
 	
 	private int width;

@@ -18,18 +18,20 @@ import jmotion.animation.AnimatorPanel;
 import jmotion.sprite.Sprite;
 import jmotion.sprite.SpriteLayer;
 import jmotion.sprite.SpriteSpace;
-import kingsgambit.model.Board;
 import kingsgambit.model.Square;
+import kingsgambit.model.battle.Board;
 import kingsgambit.model.command.AttackPieceCommand;
 import kingsgambit.model.command.Command;
 import kingsgambit.model.command.MovePieceCommand;
 import kingsgambit.model.command.TurnPieceCommand;
 import kingsgambit.model.event.AttackEvent;
+import kingsgambit.model.event.BattleBeginEvent;
 import kingsgambit.model.event.BeginTurnEvent;
 import kingsgambit.model.event.DieEvent;
 import kingsgambit.model.event.GameEvent;
 import kingsgambit.model.event.GameEventHandler;
 import kingsgambit.model.event.PieceMoveEvent;
+import kingsgambit.model.event.PiecePlaceEvent;
 import kingsgambit.model.event.PieceTurnEvent;
 import kingsgambit.model.event.RetreatEvent;
 import kingsgambit.model.piece.Piece;
@@ -88,7 +90,18 @@ public class BoardView extends AnimatorPanel implements GameEventHandler {
 	}
 	
 	public void handle(BeginTurnEvent event) {
-		System.out.println("Animating start of " + event.faction + "'s turn");
+	}
+	
+	public void handle(BattleBeginEvent begin) {
+	}
+	
+	public void handle(PiecePlaceEvent event) {
+		Piece p = event.getPiece();
+		if (pieceSprites.containsKey(p)) {
+			pieceSprites.get(p).pieceUpdated();
+		} else {
+			pieceSprites.put(p, PieceSpriteFactory.createSprite(p, this, pieceLayer));
+		}
 	}
 	
 	public void previewCommand(Command c) {

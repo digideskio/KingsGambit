@@ -5,9 +5,9 @@ import java.util.Collections;
 import java.util.Comparator;
 
 import kingsgambit.controller.BattleController;
-import kingsgambit.model.Board;
 import kingsgambit.model.Player;
 import kingsgambit.model.Square;
+import kingsgambit.model.battle.Board;
 import kingsgambit.model.command.AttackPieceCommand;
 import kingsgambit.model.command.Command;
 import kingsgambit.model.command.MovePieceCommand;

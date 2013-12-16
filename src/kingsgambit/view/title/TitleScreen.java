@@ -10,8 +10,9 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 
 import kingsgambit.controller.BattleController;
-import kingsgambit.model.BattleParameters;
 import kingsgambit.model.PlayerControlOption;
+import kingsgambit.model.battle.BattleParameters;
+import kingsgambit.model.battle.BattleType;
 import kingsgambit.view.battle.BattleView;
 
 public class TitleScreen extends JFrame {
@@ -56,6 +57,10 @@ public class TitleScreen extends JFrame {
 		newGame.setLayout(new FlowLayout());
 		newGame.setSize(200, 250);
 
+		newGame.add(new JLabel("Battle Type:"));
+		final JComboBox<BattleType> types = new JComboBox<>(BattleType.TYPES);
+		newGame.add(types);
+		
 		newGame.add(new JLabel("Red Player:"));
 		final JComboBox<PlayerControlOption> redOptions = new JComboBox<PlayerControlOption>(
 				PlayerControlOption.values()
@@ -71,7 +76,9 @@ public class TitleScreen extends JFrame {
 		JButton begin = new JButton("Begin");
 		begin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				startGame((PlayerControlOption)redOptions.getSelectedItem(), (PlayerControlOption)blueOptions.getSelectedItem());
+				startGame((BattleType)types.getSelectedItem(),
+						(PlayerControlOption)redOptions.getSelectedItem(), 
+						(PlayerControlOption)blueOptions.getSelectedItem());
 			}
 		});
 		newGame.add(begin);
@@ -88,17 +95,18 @@ public class TitleScreen extends JFrame {
 		newGame.setVisible(true);
 	}
 	
-	private void startGame(final PlayerControlOption red, final PlayerControlOption blue) {
+	private void startGame(final BattleType type, final PlayerControlOption red, final PlayerControlOption blue) {
 		new Thread(
 			new Runnable() {
 				public void run() {
-					BattleParameters parameters = new BattleParameters(red, blue);
+					BattleParameters parameters = new BattleParameters(type, red, blue);
 					boolean redHuman = red == PlayerControlOption.HUMAN;
 					boolean blueHuman = blue == PlayerControlOption.HUMAN;
 					
 					BattleController controller = new BattleController(parameters);
 					BattleView view = new BattleView(controller, redHuman, blueHuman);
 					controller.setView(view);
+					
 					controller.getBattle().begin();
 				}
 			}

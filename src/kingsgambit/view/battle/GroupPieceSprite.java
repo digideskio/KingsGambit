@@ -93,6 +93,11 @@ public class GroupPieceSprite implements PieceSprite {
 
 	public void setLocation(int x, int y) {
 	}
+	
+	public void pieceUpdated() {
+		for (SinglePieceSprite sprite : sprites)
+			sprite.pieceUpdated();
+	}
 
 	public int getX() {
 		return 0;
@@ -103,15 +108,16 @@ public class GroupPieceSprite implements PieceSprite {
 	}
 
 	public int getWidth() {
-		return 0;
+		return view.getTileWidth();
 	}
 
 	public int getHeight() {
-		return 0;
+		return view.getTileWidth();
 	}
 	
 	public GroupPieceSprite(Piece piece, BoardView view, SpriteSpace space) {
 		this.piece = piece;
+		this.view = view;
 		
 		int offset = view.getTileWidth()/4;
 		int[] xs = new int[]{-offset, offset, -offset, offset};
@@ -137,6 +143,7 @@ public class GroupPieceSprite implements PieceSprite {
 		return i;
 	}
 	
+	private BoardView view;
 	private SinglePieceSprite[] sprites;
 	private boolean[] alive;
 	private int aliveFigures;

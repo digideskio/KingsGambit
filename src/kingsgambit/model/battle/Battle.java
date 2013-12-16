@@ -1,16 +1,26 @@
-package kingsgambit.model;
+package kingsgambit.model.battle;
 
 import kingsgambit.controller.BattleController;
+import kingsgambit.model.DiceRoller;
+import kingsgambit.model.Direction;
+import kingsgambit.model.Faction;
+import kingsgambit.model.Player;
+import kingsgambit.model.Square;
+import kingsgambit.model.WeaponDieFace;
 import kingsgambit.model.command.AttackPieceCommand;
 import kingsgambit.model.command.Command;
 import kingsgambit.model.command.CommandExecutor;
 import kingsgambit.model.command.EndTurnCommand;
+import kingsgambit.model.command.FactionReadyCommand;
 import kingsgambit.model.command.MovePieceCommand;
+import kingsgambit.model.command.PlacePieceCommand;
 import kingsgambit.model.command.TurnPieceCommand;
 import kingsgambit.model.event.AttackEvent;
+import kingsgambit.model.event.BattleBeginEvent;
 import kingsgambit.model.event.BeginTurnEvent;
 import kingsgambit.model.event.DieEvent;
 import kingsgambit.model.event.PieceMoveEvent;
+import kingsgambit.model.event.PiecePlaceEvent;
 import kingsgambit.model.event.PieceTurnEvent;
 import kingsgambit.model.event.RetreatEvent;
 import kingsgambit.model.piece.Piece;
@@ -74,6 +84,37 @@ public class Battle implements CommandExecutor {
 		}
 	}
 	
+	@Override
+	public void execute(PlacePieceCommand c) {
+		Piece p = c.getPiece();
+		p.setPosition(c.getOperativeSquare());
+		p.setBoard(board);
+		board.addPiece(p);
+		
+		controller.handle(new PiecePlaceEvent(p));
+	}
+	
+	@Override
+	public void execute(FactionReadyCommand ready) {
+		System.out.println(ready.getFaction() + " is ready");
+		redReady |= ready.getFaction() == Faction.RED;
+		blueReady |= ready.getFaction() == Faction.BLUE;
+
+		// If both factions are ready, start the game
+		if (redReady && blueReady) {
+			System.out.println("Everybody is ready");
+			movingPlayer = red;
+			controller.handle(new BeginTurnEvent(Faction.RED));
+		}
+	}
+	
+	/**
+	 * Starts the battle.
+	 */
+	public void begin() {
+		controller.handle(new BattleBeginEvent());
+	}
+	
 	public Board getBoard() {
 		return board;
 	}
@@ -120,14 +161,14 @@ public class Battle implements CommandExecutor {
 	public void setController(BattleController controller) {
 		this.controller = controller;
 	}
-	
-	public void begin() {
-		movingPlayer = red;
-		controller.handle(new BeginTurnEvent(Faction.RED));
+
+	public BattleConfiguration getConfiguration() {
+		return configuration;
 	}
 	
 	public Battle(BattleParameters parameters) {
-		board = BoardFactory.getBoard();
+		configuration = parameters.battleType.createConfiguration();
+		board = new Board(9, 8, configuration);
 		
 		red = new Player(Faction.RED, board, 2);
 		blue = new Player(Faction.BLUE, board, 2);
@@ -201,10 +242,13 @@ public class Battle implements CommandExecutor {
 		controller.handle(new RetreatEvent(piece, retreatFrom, retreatTo));
 	}
 
+	private BattleConfiguration configuration;
 	private BattleController controller;
 	
 	private DiceRoller weaponDice;
 	
+	private boolean redReady;
+	private boolean blueReady;
 	private Player movingPlayer;
 	private Player red;
 	private Player blue;

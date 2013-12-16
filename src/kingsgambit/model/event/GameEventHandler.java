@@ -7,4 +7,6 @@ public interface GameEventHandler {
 	public void handle(BeginTurnEvent event);
 	public void handle(DieEvent event);
 	public void handle(RetreatEvent event);
+	public void handle(PiecePlaceEvent event);
+	public void handle(BattleBeginEvent event);
 }

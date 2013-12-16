@@ -3,13 +3,14 @@ package kingsgambit.controller;
 import java.util.HashMap;
 
 import jmotion.animation.Animation;
-import kingsgambit.model.Battle;
-import kingsgambit.model.BattleParameters;
 import kingsgambit.model.Faction;
 import kingsgambit.model.PlayerControlOption;
 import kingsgambit.model.ai.AI;
 import kingsgambit.model.ai.SimpleAI;
+import kingsgambit.model.battle.Battle;
+import kingsgambit.model.battle.BattleParameters;
 import kingsgambit.model.command.Command;
+import kingsgambit.model.event.BattleBeginEvent;
 import kingsgambit.model.event.BeginTurnEvent;
 import kingsgambit.model.event.GameEvent;
 import kingsgambit.view.battle.BattleView;
@@ -47,6 +48,9 @@ public class BattleController {
 			Faction whosTurn = ((BeginTurnEvent)event).faction;
 			if (factionAIs.containsKey(whosTurn))
 				factionAIs.get(whosTurn).makeMoves();
+		} else if (event instanceof BattleBeginEvent) {
+			for (AI ai : factionAIs.values())
+				ai.battleStart();
 		}
 	}
 	

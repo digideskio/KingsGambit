@@ -6,6 +6,7 @@ import kingsgambit.controller.BattleController;
 import kingsgambit.model.Player;
 import kingsgambit.model.command.Command;
 import kingsgambit.model.command.EndTurnCommand;
+import kingsgambit.model.command.FactionReadyCommand;
 
 public abstract class BaseAI implements AI {
 	public void makeMoves() {
@@ -19,6 +20,12 @@ public abstract class BaseAI implements AI {
 		
 		if (player.getMovesLeft() > 0)
 			makeMoves();
+	}
+	
+	public void battleStart() {
+		// TODO place pieces
+		
+		controller.executeCommandSynchronous(new FactionReadyCommand(player.faction));
 	}
 	
 	protected abstract Command bestMove();

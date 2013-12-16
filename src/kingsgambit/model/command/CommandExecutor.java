@@ -6,4 +6,6 @@ public interface CommandExecutor {
 	public void execute(AttackPieceCommand c);
 	public void execute(TurnPieceCommand c);
 	public void execute(EndTurnCommand c);
+	public void execute(PlacePieceCommand c);
+	public void execute(FactionReadyCommand c);
 }

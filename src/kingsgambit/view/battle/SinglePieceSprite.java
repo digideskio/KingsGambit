@@ -97,6 +97,12 @@ public class SinglePieceSprite implements PieceSprite {
 	public void nextFrame() {
 		frames.advanceFrame();
 	}
+
+	public void pieceUpdated() {
+		Point center = view.getSquareCenter(piece.getPosition().row, piece.getPosition().column);
+		x = center.x + xDisplacement;
+		y = center.y + yDisplacement;
+	}
 	
 	public void render(Graphics2D g) {
 		g.drawImage(frames.currentFrame(), x-getWidth()/2, y-getHeight(), null);

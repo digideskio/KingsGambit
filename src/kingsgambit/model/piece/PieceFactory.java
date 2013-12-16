@@ -1,5 +1,6 @@
 package kingsgambit.model.piece;
 
+import kingsgambit.model.Direction;
 import kingsgambit.model.Faction;
 import kingsgambit.model.Square;
 import kingsgambit.model.WeaponDieFace;
@@ -14,22 +15,36 @@ public class PieceFactory {
 	public static final Ability DOUBLE_HIT_MELEE = new Ability(inFrontPattern, 2, WeaponDieFace.AXE);
 	public static final Ability RANGED = new Ability(archerPattern, 1, WeaponDieFace.BOW);
 	
+	public static Direction getDirection(Faction f) {
+		return f == Faction.RED ? Direction.SOUTH : Direction.NORTH;
+	}
+	
 	public static Piece getFootsoldier(Faction faction) {
-		return new Piece("Soldier", faction, 4, 1, BASIC_MELEE);
+		Piece soldier = new Piece("Soldier", faction, 4, 1, BASIC_MELEE);
+		soldier.setFacing(getDirection(faction));
+		
+		return soldier;
 	}
 
 	public static Piece getKnight(Faction faction) {
-		return new Piece("Knight", faction, 10, 2, 2, DOUBLE_HIT_MELEE);
+		Piece knight =  new Piece("Knight", faction, 10, 2, 2, DOUBLE_HIT_MELEE);
+		knight.setFacing(getDirection(faction));
+		
+		return knight;
 	}
 
 	public static Piece getArcher(Faction faction) {
 		Piece archer = new Piece("Archer", faction, 4, 1, RANGED);
+		archer.setFacing(getDirection(faction));
+		
 		return archer;
 	}
 
 	public static Piece getKing(Faction faction) {
 		Piece king = new Piece("King", faction, 1, 2, DOUBLE_HIT_MELEE);
 		king.addProperty(PieceProperty.FEARLESS);
+		king.setFacing(getDirection(faction));
+
 		return king;
 	}
 }
