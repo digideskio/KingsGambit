@@ -21,15 +21,22 @@ public class AttackPieceCommand implements Command {
 		return attacker + " attacks " + defender;
 	}
 	
-	public int getHits(WeaponDieFace[] faces) {
-		int hits = 0;
-		for (WeaponDieFace f : faces) {
-			for (WeaponDieFace hitFace : facesForHits) {
+	/**
+	 * Find the number of hits scored from this roll.
+	 * Where the ability hits with multiple faces (as in the Peasant's attack),
+	 * the greater of the faces hit is used.
+	 */
+	public int getHits(WeaponDieFace[] facesRolled) {
+		int maxHits = 0;
+		for (WeaponDieFace hitFace : facesForHits) {
+			int hitsThisFace = 0;
+			for (WeaponDieFace f : facesRolled) {
 				if (f == hitFace)
-					++hits;
+					++hitsThisFace;
 			}
+			maxHits = Math.max(maxHits, hitsThisFace);
 		}
-		return hits;
+		return maxHits;
 	}
 
 	public final int numRolls;

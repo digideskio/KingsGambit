@@ -13,6 +13,7 @@ public class PieceFactory {
 
 	public static final Ability BASIC_MELEE = new Ability(inFrontPattern, 1, WeaponDieFace.AXE);
 	public static final Ability DOUBLE_HIT_MELEE = new Ability(inFrontPattern, 2, WeaponDieFace.AXE);
+	public static final Ability AXE_OR_BOW = new Ability(inFrontPattern, 1, WeaponDieFace.AXE, WeaponDieFace.BOW);
 	public static final Ability RANGED = new Ability(archerPattern, 1, WeaponDieFace.BOW);
 	
 	public static Direction getDirection(Faction f) {
@@ -47,7 +48,7 @@ public class PieceFactory {
 
 		return king;
 	}
-	
+
 	public static Piece getMercenary(Faction faction) {
 		Piece merc = new Piece("Mercenary", faction, 2, 1, BASIC_MELEE);
 		merc.addProperty(PieceProperty.FEARLESS);
@@ -55,5 +56,13 @@ public class PieceFactory {
 		merc.setFacing(getDirection(faction));
 		
 		return merc;
+	}
+	
+	public static Piece getPeasant(Faction faction) {
+		Piece peasant = new Piece("Peasant", faction, 4, 1, AXE_OR_BOW);
+		peasant.addProperty(PieceProperty.FEARFUL);
+		peasant.setFacing(getDirection(faction));
+		
+		return peasant;
 	}
 }

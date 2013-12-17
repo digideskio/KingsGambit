@@ -49,6 +49,11 @@ public class AdvancedBattle extends BattleType {
 			red.add(PieceFactory.getMercenary(Faction.RED));
 			blue.add(PieceFactory.getMercenary(Faction.BLUE));
 		}
+		// Peasants
+		for (int i = 0; i<2; ++i) {
+			red.add(PieceFactory.getPeasant(Faction.RED));
+			blue.add(PieceFactory.getPeasant(Faction.BLUE));
+		}
 		
 		return new BattleConfiguration(initial, red, redRegion, blue, blueRegion);
 	}
