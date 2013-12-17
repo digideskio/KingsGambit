@@ -57,12 +57,21 @@ public class PieceFactory {
 		
 		return merc;
 	}
-	
+
 	public static Piece getPeasant(Faction faction) {
 		Piece peasant = new Piece("Peasant", faction, 4, 1, AXE_OR_BOW);
 		peasant.addProperty(PieceProperty.FEARFUL);
 		peasant.setFacing(getDirection(faction));
 		
 		return peasant;
+	}
+
+	public static Piece getLandsknecht(Faction faction) {
+		Piece lands = new Piece("Landsknecht", faction, 2, 2, new Ability(adjacentPattern, 2, WeaponDieFace.AXE));
+		lands.setMovesPerMove(2);
+		lands.setMovesPerTurn(2);
+		lands.setFacing(getDirection(faction));
+		
+		return lands;
 	}
 }

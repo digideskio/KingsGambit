@@ -86,13 +86,13 @@ public class Piece {
 			moveTo = direction.projectFrom(moveTo, 1);
 			if (!board.containsSquare(moveTo) || board.hasPieceAt(moveTo))
 				break;
-			moves.add(new MovePieceCommand(this, moveTo, 1));
+			moves.add(new MovePieceCommand(this, moveTo));
 		}
 		
 		// Add turns
-		moves.add(new TurnPieceCommand(this, direction.leftFace(), 1));
-		moves.add(new TurnPieceCommand(this, direction.rightFace(), 1));
-		moves.add(new TurnPieceCommand(this, direction.aboutFace(), 1));
+		moves.add(new TurnPieceCommand(this, direction.leftFace()));
+		moves.add(new TurnPieceCommand(this, direction.rightFace()));
+		moves.add(new TurnPieceCommand(this, direction.aboutFace()));
 		
 		return moves;
 	}
@@ -109,6 +109,22 @@ public class Piece {
 		return properties.contains(prop);
 	}
 
+	public void setMovesPerMove(int moves) {
+		movesPerMove = moves;
+	}
+	
+	public int getMovesPerMove() {
+		return movesPerMove;
+	}
+
+	public void setMovesPerTurn(int moves) {
+		movesPerTurn = moves;
+	}
+	
+	public int getMovesPerTurn() {
+		return movesPerTurn;
+	}
+
 	public Piece(String type, Faction faction, int numFigures, int healthPerFigure, Ability ability) {
 		this(type, faction, 1, numFigures, healthPerFigure, ability);
 	}
@@ -122,12 +138,16 @@ public class Piece {
 		this.speed = speed;
 		properties = new LinkedList<PieceProperty>();
 		position = new Square(0, 0);
+		movesPerTurn = 1;
+		movesPerMove = 1;
 	}
 	
 	protected final String type;
 	protected final int healthPerFigure;
 	protected final int speed;
 	protected final Ability ability;
+	protected int movesPerMove;
+	protected int movesPerTurn;
 
 	protected Board board;
 	protected Square position;

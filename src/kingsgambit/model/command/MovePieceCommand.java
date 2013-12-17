@@ -5,7 +5,7 @@ import kingsgambit.model.piece.Piece;
 
 public class MovePieceCommand implements Command {
 	public int getCost() {
-		return cost;
+		return mover.getMovesPerMove();
 	}
 	
 	public Square getOperativeSquare() {
@@ -32,15 +32,13 @@ public class MovePieceCommand implements Command {
 		cex.execute(this);
 	}
 
-	public MovePieceCommand(Piece mover, Square destination, int cost) {
+	public MovePieceCommand(Piece mover, Square destination) {
 		this.mover = mover;
 		this.source = mover.getPosition();
 		this.destination = destination;
-		this.cost = cost;
 	}
 
 	private Piece mover;
 	private Square source;
 	private Square destination;
-	private int cost;
 }

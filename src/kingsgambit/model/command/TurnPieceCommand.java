@@ -6,7 +6,7 @@ import kingsgambit.model.piece.Piece;
 
 public class TurnPieceCommand implements Command {
 	public int getCost() {
-		return cost;
+		return mover.getMovesPerTurn();
 	}
 	
 	public Square getOperativeSquare() {
@@ -29,13 +29,11 @@ public class TurnPieceCommand implements Command {
 		return mover + " faces " + newFacing;
 	}
 
-	public TurnPieceCommand(Piece mover, Direction newFacing, int cost) {
+	public TurnPieceCommand(Piece mover, Direction newFacing) {
 		this.mover = mover;
-		this.cost = cost;
 		this.newFacing = newFacing;
 	}
 
 	private Piece mover;
-	private int cost;
 	private Direction newFacing;
 }
