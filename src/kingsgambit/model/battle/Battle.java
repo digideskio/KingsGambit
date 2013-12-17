@@ -77,17 +77,25 @@ public class Battle implements CommandExecutor {
 		// Publicize the event
 		controller.handle(new AttackEvent(c.attacker, c.defender, numKills, roll));
 
+		int numRetreatRolls = 0;
+		for (WeaponDieFace f : roll) {
+			if (f == WeaponDieFace.RETREAT)
+				++numRetreatRolls;
+		}
+		
 		// Check for attacker retreat
 		if (!c.attacker.hasProperty(PieceProperty.FEARLESS)) {
-			int numRetreatRolls = 0;
-			for (WeaponDieFace f : roll) {
-				if (f == WeaponDieFace.RETREAT)
-					++numRetreatRolls;
-			}
 			if (c.attacker.hasProperty(PieceProperty.FEARFUL) && numRetreatRolls > 0)
 				causeRetreat(c.attacker, c.attacker.getFacing().aboutFace(), numRetreatRolls); // Fearful retreat, one square per roll
 			else if (numRetreatRolls == c.numRolls)
 				causeRetreat(c.attacker, c.attacker.getFacing().aboutFace(), 1);
+		}
+		
+		// Check for defender retreat
+		if (!c.defender.isDead()
+				&& c.attacker.hasProperty(PieceProperty.INTIMIDATING) 
+				&& numRetreatRolls > 0) {
+			causeRetreat(c.defender, c.attacker.getFacing(), numRetreatRolls);
 		}
 	}
 	
