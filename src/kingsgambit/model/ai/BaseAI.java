@@ -10,6 +10,9 @@ import kingsgambit.model.command.FactionReadyCommand;
 
 public abstract class BaseAI implements AI {
 	public void makeMoves() {
+		if (controller.getBattle().isGameOver())
+			return;
+
 		List<Command> allCommands = player.getLegalCommands();
 		if (allCommands.size() == 0) {
 			System.out.println(player + " AI must pass");

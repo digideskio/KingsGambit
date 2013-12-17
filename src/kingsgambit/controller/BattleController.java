@@ -29,6 +29,7 @@ public class BattleController {
 	}
 	
 	public void executeCommandSynchronous(final Command command) {
+		System.out.println("Controller executing " + command);
 		// Pass the command to the model
 		battle.executeCommand(command);
 	}

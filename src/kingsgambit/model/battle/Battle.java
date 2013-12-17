@@ -19,6 +19,7 @@ import kingsgambit.model.event.AttackEvent;
 import kingsgambit.model.event.BattleBeginEvent;
 import kingsgambit.model.event.BeginTurnEvent;
 import kingsgambit.model.event.DieEvent;
+import kingsgambit.model.event.GameOverEvent;
 import kingsgambit.model.event.PieceMoveEvent;
 import kingsgambit.model.event.PiecePlaceEvent;
 import kingsgambit.model.event.PieceTurnEvent;
@@ -35,9 +36,15 @@ public class Battle implements CommandExecutor {
 		
 		movingPlayer.spendMoves(c.getCost());
 		
-		// Check for end of turn due to spending all moves allowed
-		if (!(c instanceof EndTurnCommand) && movingPlayer.getMovesLeft() == 0)
-			endTurn();
+		if (isGameOver()) {
+			System.out.println("GAME OVER");
+			controller.handle(new GameOverEvent());
+		} else {
+			System.out.println("Game is NOT OVER");
+			// Check for end of turn due to spending all moves allowed
+			if (!(c instanceof EndTurnCommand) && movingPlayer.getMovesLeft() == 0)
+				endTurn();
+		}
 	}
 	
 	@Override

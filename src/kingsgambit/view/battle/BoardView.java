@@ -30,6 +30,7 @@ import kingsgambit.model.event.BeginTurnEvent;
 import kingsgambit.model.event.DieEvent;
 import kingsgambit.model.event.GameEvent;
 import kingsgambit.model.event.GameEventHandler;
+import kingsgambit.model.event.GameOverEvent;
 import kingsgambit.model.event.PieceMoveEvent;
 import kingsgambit.model.event.PiecePlaceEvent;
 import kingsgambit.model.event.PieceTurnEvent;
@@ -91,8 +92,11 @@ public class BoardView extends AnimatorPanel implements GameEventHandler {
 	
 	public void handle(BeginTurnEvent event) {
 	}
-	
+
 	public void handle(BattleBeginEvent begin) {
+	}
+
+	public void handle(GameOverEvent over) {
 	}
 	
 	public void handle(PiecePlaceEvent event) {

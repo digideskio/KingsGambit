@@ -29,6 +29,7 @@ import kingsgambit.model.event.AttackEvent;
 import kingsgambit.model.event.BattleBeginEvent;
 import kingsgambit.model.event.BeginTurnEvent;
 import kingsgambit.model.event.GameEvent;
+import kingsgambit.model.event.GameOverEvent;
 import kingsgambit.model.piece.Piece;
 import kingsgambit.view.Banner;
 import kingsgambit.view.DiceView;
@@ -85,6 +86,9 @@ public class BattleView extends JFrame {
 				if (controlBlue)
 					controller.executeCommand(new FactionReadyCommand(Faction.BLUE));
 			}
+			return null;
+		} else if (event instanceof GameOverEvent) {
+			state = ENEMY_TURN;
 			return null;
 		} else {
 			Animation a = boardView.getAnimation(event);
