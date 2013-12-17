@@ -70,8 +70,6 @@ public class PlacePiecesPanel extends JPanel {
 	private class PieceRenderer implements ListCellRenderer<Piece> {
 		public Component getListCellRendererComponent(JList<? extends Piece> list, Piece value, int index, boolean isSelected, boolean cellHasFocus) {
 			FrameSet f = AnimationFactory.get(value.getType().toLowerCase());
-			if (f == null)
-				f = AnimationFactory.get("pantheon");
 			f.setSequence(8);
 			
 			JPanel panel = new JPanel();

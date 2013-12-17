@@ -157,8 +157,6 @@ public class SinglePieceSprite implements PieceSprite {
 		this.view = view;
 		this.space = space;
 		frames = AnimationFactory.get(piece.getType().toLowerCase());
-		if (frames == null)
-			frames = AnimationFactory.get("pantheon");
 		setFrames(piece.getFacing(), Action.STAND);
 		
 		Point center = view.getSquareCenter(piece.getPosition().row, piece.getPosition().column);
