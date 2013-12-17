@@ -14,7 +14,7 @@ public interface PieceSprite extends Sprite {
 	public Animation animate(PieceTurnEvent event);
 	public Animation animate(AttackEvent event);
 	public Animation animate(RetreatEvent event);
-	public Animation takeDamage(int damage);
+	public Animation takeDamage(int damage, Piece attacker);
 	public Animation die();
 	public void pieceUpdated();
 }

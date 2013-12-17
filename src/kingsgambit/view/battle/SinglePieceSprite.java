@@ -63,8 +63,8 @@ public class SinglePieceSprite implements PieceSprite {
 		);
 	}
 	
-	public Animation takeDamage(int damage) {
-		final FrameSet hitEffect = AnimationFactory.get("sword_hit");
+	public Animation takeDamage(int damage, Piece attacker) {
+		final FrameSet hitEffect = AnimationFactory.get("attack_" + attacker.getType().toLowerCase());
 		
 		Animation addEffect = new Animation() {
 			public void stepAhead(int millis) {

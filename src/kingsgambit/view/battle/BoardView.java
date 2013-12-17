@@ -78,7 +78,7 @@ public class BoardView extends AnimatorPanel implements GameEventHandler {
 	public void handle(AttackEvent event) {
 		eventAnimation = new AnimationSequence(
 				pieceSprites.get(event.attacker).animate(event),
-				pieceSprites.get(event.defender).takeDamage(event.numKills)
+				pieceSprites.get(event.defender).takeDamage(event.numKills, event.attacker)
 				);
 	}
 	

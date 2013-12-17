@@ -68,13 +68,13 @@ public class GroupPieceSprite implements PieceSprite {
 		return new ParallelAnimation(animations);
 	}
 
-	public Animation takeDamage(int damage) {
+	public Animation takeDamage(int damage, Piece attacker) {
 		Animation[] animations = new Animation[damage];
 		for (int d = 0; d<damage && aliveFigures > 0; ++d) {
 			int index = getRandomSprite();
 			alive[index] = false;
 			--aliveFigures;
-			animations[d] = sprites[index].takeDamage(1);
+			animations[d] = sprites[index].takeDamage(1, attacker);
 		}
 		
 		return new ParallelAnimation(animations);
