@@ -29,17 +29,25 @@ public class AdvancedBattle extends BattleType {
 
 		LinkedList<Piece> red = new LinkedList<>();
 		LinkedList<Piece> blue = new LinkedList<>();
+		// Footsoldiers
 		for (int i = 0; i<5; ++i) {
 			red.add(PieceFactory.getFootsoldier(Faction.RED));
 			blue.add(PieceFactory.getFootsoldier(Faction.BLUE));
 		}
+		// Archers
 		for (int i = 0; i<3; ++i) {
 			red.add(PieceFactory.getArcher(Faction.RED));
 			blue.add(PieceFactory.getArcher(Faction.BLUE));
 		}
+		// Knights
 		for (int i = 0; i<3; ++i) {
 			red.add(PieceFactory.getKnight(Faction.RED));
 			blue.add(PieceFactory.getKnight(Faction.BLUE));
+		}
+		// Mercs
+		for (int i = 0; i<2; ++i) {
+			red.add(PieceFactory.getMercenary(Faction.RED));
+			blue.add(PieceFactory.getMercenary(Faction.BLUE));
 		}
 		
 		return new BattleConfiguration(initial, red, redRegion, blue, blueRegion);

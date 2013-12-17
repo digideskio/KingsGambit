@@ -47,4 +47,13 @@ public class PieceFactory {
 
 		return king;
 	}
+	
+	public static Piece getMercenary(Faction faction) {
+		Piece merc = new Piece("Mercenary", faction, 2, 1, BASIC_MELEE);
+		merc.addProperty(PieceProperty.FEARLESS);
+		merc.addProperty(PieceProperty.INTIMIDATING);
+		merc.setFacing(getDirection(faction));
+		
+		return merc;
+	}
 }
