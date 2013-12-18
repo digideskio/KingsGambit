@@ -3,14 +3,19 @@ package kingsgambit.model.ai;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
 import kingsgambit.controller.BattleController;
+import kingsgambit.model.Faction;
 import kingsgambit.model.Player;
 import kingsgambit.model.Square;
+import kingsgambit.model.battle.BattleConfiguration;
 import kingsgambit.model.battle.Board;
+import kingsgambit.model.battle.BoardRegion;
 import kingsgambit.model.command.AttackPieceCommand;
 import kingsgambit.model.command.Command;
 import kingsgambit.model.command.MovePieceCommand;
+import kingsgambit.model.command.PlacePieceCommand;
 import kingsgambit.model.command.TurnPieceCommand;
 import kingsgambit.model.piece.Piece;
 
@@ -41,6 +46,28 @@ public class SimpleAI extends BaseAI {
 		});
 		
 		return allCommands.get(0);
+	}
+	
+	protected void placePieces(BattleConfiguration config) {
+		BoardRegion myRegion = player.faction == Faction.RED
+				? config.getRedRegion()
+				: config.getBlueRegion();
+		
+		List<Piece> myPieces = player.faction == Faction.RED
+				? config.getRedOptions()
+				: config.getBlueOptions();
+		
+		for (Square s : myRegion) {
+			if (!controller.getBattle().getBoard().hasPieceAt(s)) {
+				Piece randomPiece = getRandomPiece(myPieces);
+				controller.executeCommand(new PlacePieceCommand(randomPiece, s));
+			}
+		}
+	}
+	
+	private Piece getRandomPiece(List<Piece> pieces) {
+		int index = (int)(Math.random()*pieces.size());
+		return pieces.remove(index);
 	}
 	
 	private int score(Command c) {

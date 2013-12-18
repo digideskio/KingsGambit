@@ -92,8 +92,10 @@ public class BattleView extends JFrame {
 			return null;
 		} else {
 			Animation a = boardView.getAnimation(event);
-			boardView.addAnimation(a);
-			getWaitingState(a, state).enterState();
+			if (a != null) {
+				boardView.addAnimation(a);
+				getWaitingState(a, state).enterState();
+			}
 			return a;
 		}
 	}
@@ -127,6 +129,7 @@ public class BattleView extends JFrame {
 		battle = controller.getBattle();
 		boardView = new BoardView(controller.getBattle().getBoard(), this);
 		diceView = new DiceView();
+		state = ENEMY_TURN;
 
 		setSize(800, 800);
 		setLocationRelativeTo(null);
