@@ -180,6 +180,8 @@ public class BattleView extends JFrame {
 				preparePlacement(Faction.RED);
 			else if (controlBlue)
 				preparePlacement(Faction.BLUE);
+			else
+				beginGame(); // AI vs AI
 		} else {
 			beginGame();
 		}
@@ -196,6 +198,7 @@ public class BattleView extends JFrame {
 	}
 	
 	private void beginGame() {
+		System.out.println("BATTLE VIEW ADDING DICE");
 		if (placePieces != null)
 			getContentPane().remove(placePieces);
 		
