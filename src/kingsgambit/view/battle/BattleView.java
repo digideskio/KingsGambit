@@ -131,7 +131,7 @@ public class BattleView extends JFrame {
 		diceView = new DiceView();
 		state = ENEMY_TURN;
 
-		setSize(800, 800);
+		setSize(900, 800);
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(new BorderLayout());
 		getContentPane().add(boardView, BorderLayout.CENTER);

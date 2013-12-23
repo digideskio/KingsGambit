@@ -40,7 +40,7 @@ public class PlacePiecesPanel extends JPanel {
 	}
 
 	public PlacePiecesPanel(final BattleView view, BattleConfiguration config, final Faction faction) {
-		setPreferredSize(new Dimension(100, 400));
+		setPreferredSize(new Dimension(200, 600));
 		model = new DefaultListModel<>();
 		if (faction == Faction.RED) {
 			for (Piece p : config.getRedOptions())
@@ -55,7 +55,7 @@ public class PlacePiecesPanel extends JPanel {
 		toPlace.setSelectedIndex(0);
 		
 		JScrollPane scroller = new JScrollPane(toPlace);
-		scroller.setPreferredSize(new Dimension(150, 350));
+		scroller.setPreferredSize(new Dimension(200, 500));
 		add(scroller);
 		
 		JButton doneButton = new JButton("Ready!");
