@@ -38,5 +38,29 @@ public abstract class BoardRegion implements Iterable<Square> {
 		};
 	}
 	
+	public static BoardRegion getFullRegion() {
+		return new BoardRegion() {
+			public Iterator<Square> iterator() {
+				return null;
+			}
+			
+			public boolean contains(Square s) {
+				return true;
+			}
+		};
+	}
+	
+	public BoardRegion getComplement() {
+		final BoardRegion base = this;
+		return new BoardRegion() {
+			public Iterator<Square> iterator() {
+				return null;
+			}
+
+			public boolean contains(Square s) {
+				return !base.contains(s);
+			}
+		};
+	}
 	public abstract boolean contains(Square s);
 }

@@ -20,6 +20,7 @@ import jmotion.sprite.SpriteLayer;
 import jmotion.sprite.SpriteSpace;
 import kingsgambit.model.Square;
 import kingsgambit.model.battle.Board;
+import kingsgambit.model.battle.BoardRegion;
 import kingsgambit.model.command.AttackPieceCommand;
 import kingsgambit.model.command.Command;
 import kingsgambit.model.command.MovePieceCommand;
@@ -153,6 +154,14 @@ public class BoardView extends AnimatorPanel implements GameEventHandler {
 		squareColors.clear();
 	}
 	
+	public BoardRegion getShroudedRegion() {
+		return shroud;
+	}
+	
+	public void setShroud(BoardRegion shroudedRegion) {
+		shroud = shroudedRegion;
+	}
+	
 	public BoardView(Board board, BattleView battleView) {
 		this.battleView = battleView;
 		this.board = board;
@@ -165,6 +174,7 @@ public class BoardView extends AnimatorPanel implements GameEventHandler {
 		
 		pieceSprites = new HashMap<Piece, PieceSprite>();
 		squareColors = new HashMap<Square, Color>();
+		shroud = BoardRegion.getFullRegion().getComplement();
 		
 		for (Piece p : board.getPieces())
 			pieceSprites.put(p, PieceSpriteFactory.createSprite(p, this, pieceLayer));
@@ -203,6 +213,15 @@ public class BoardView extends AnimatorPanel implements GameEventHandler {
 				g.drawImage(grass, p.x, p.y, null);
 			}
 		}
+		
+		if (shroud != null) {
+			for (int col = 0; col<board.getColumns(); ++col) {
+				for (int row = -1; row<=board.getRows(); ++row) {
+					if (shroud.contains(new Square(row, col)))
+						shroudSquare(g, row, col);
+				}
+			}
+		}
 
 		Image redHighlight = null;
 		Image blueHighlight = null;
@@ -232,6 +251,14 @@ public class BoardView extends AnimatorPanel implements GameEventHandler {
 			s.render(g);
 	}
 	
+	private void shroudSquare(Graphics2D g, int row, int col) {
+		Color shroudBase = Color.black;
+		Color shroud = new Color(shroudBase.getRed(), shroudBase.getGreen(), shroudBase.getBlue(), 100);
+		g.setColor(shroud);
+		Point p = getSquarePosition(row, col);
+		g.fillRect(p.x, p.y, tileWidth, tileWidth);
+	}
+	
 	private Animation eventAnimation;
 	
 	private BattleView battleView;
@@ -244,6 +271,7 @@ public class BoardView extends AnimatorPanel implements GameEventHandler {
 	
 	private HashMap<Piece, PieceSprite> pieceSprites;
 	private HashMap<Square, Color> squareColors;
+	private BoardRegion shroud;
 	
 	private LinkedList<Animation> animations;
 }

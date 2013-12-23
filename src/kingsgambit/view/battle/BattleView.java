@@ -22,6 +22,7 @@ import kingsgambit.model.Square;
 import kingsgambit.model.battle.Battle;
 import kingsgambit.model.battle.BattleConfiguration;
 import kingsgambit.model.battle.Board;
+import kingsgambit.model.battle.BoardRegion;
 import kingsgambit.model.command.Command;
 import kingsgambit.model.command.FactionReadyCommand;
 import kingsgambit.model.command.PlacePieceCommand;
@@ -190,14 +191,21 @@ public class BattleView extends JFrame {
 	}
 	
 	private void preparePlacement(Faction f) {
+		BattleConfiguration config = controller.getBattle().getConfiguration();
+		if (f == Faction.BLUE)
+			boardView.setShroud(config.getBlueRegion().getComplement());
+		else
+			boardView.setShroud(config.getRedRegion().getComplement());
+		
 		placingFor = f;
-		placePieces = new PlacePiecesPanel(this, controller.getBattle().getConfiguration(), f);
+		placePieces = new PlacePiecesPanel(this, config, f);
 		getContentPane().add(placePieces, BorderLayout.EAST);
 		getContentPane().revalidate();
 		state = PLACE_PIECE;
 	}
 	
 	private void beginGame() {
+		boardView.setShroud(BoardRegion.getFullRegion().getComplement());
 		System.out.println("BATTLE VIEW ADDING DICE");
 		if (placePieces != null)
 			getContentPane().remove(placePieces);

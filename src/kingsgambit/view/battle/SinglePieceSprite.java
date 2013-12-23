@@ -105,6 +105,9 @@ public class SinglePieceSprite implements PieceSprite {
 	}
 	
 	public void render(Graphics2D g) {
+		if (view.getShroudedRegion().contains(piece.getPosition()))
+			return;
+
 		g.drawImage(frames.currentFrame(), x-getWidth()/2, y-getHeight(), null);
 		
 		if (effectAnimation == null || effectAnimation.isFinished()) {
