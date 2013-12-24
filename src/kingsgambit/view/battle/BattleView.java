@@ -11,6 +11,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 import jmotion.animation.Animation;
 import jmotion.animation.AnimationSequence;
@@ -130,13 +131,15 @@ public class BattleView extends JFrame {
 		this.controlRed = controlRed;
 		battle = controller.getBattle();
 		boardView = new BoardView(controller.getBattle().getBoard(), this);
+		JPanel boardFrame = new JPanel();
+		boardFrame.add(boardView);
 		diceView = new DiceView();
 		state = ENEMY_TURN;
 
 		setSize(900, 800);
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(new BorderLayout());
-		getContentPane().add(boardView, BorderLayout.CENTER);
+		getContentPane().add(boardFrame, BorderLayout.CENTER);
 		
 		setVisible(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

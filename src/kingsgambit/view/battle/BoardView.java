@@ -174,7 +174,9 @@ public class BoardView extends AnimatorPanel implements GameEventHandler {
 		this.battleView = battleView;
 		this.board = board;
 		tileWidth = 70;
-		setPreferredSize(new Dimension(board.getColumns()*tileWidth, (board.getRows()+2)*tileWidth));
+
+		Dimension size = new Dimension(board.getColumns()*tileWidth, (board.getRows()+2)*tileWidth);
+		setPreferredSize(size);
 		
 		indicatorLayer = new SpriteSpace();
 		pieceLayer = new SpriteSpace();
@@ -206,8 +208,6 @@ public class BoardView extends AnimatorPanel implements GameEventHandler {
 
 	@Override
 	protected void render(Graphics2D g) {
-		g.setClip(0, 0, getWidth(), getHeight());
-		
 		// Draw the background
 		Image grass = null;
 		try {
