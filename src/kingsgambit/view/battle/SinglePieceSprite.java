@@ -3,7 +3,6 @@ package kingsgambit.view.battle;
 import java.awt.Graphics2D;
 import java.awt.Point;
 
-import jmotion.AnimationFactory;
 import jmotion.animation.ActionAnimation;
 import jmotion.animation.Animation;
 import jmotion.animation.AnimationSequence;
@@ -11,7 +10,6 @@ import jmotion.animation.FrameSet;
 import jmotion.animation.PlayFramesAnimation;
 import jmotion.sprite.Sprite;
 import jmotion.sprite.SpriteSpace;
-import jmotion.sprite.StaticSprite;
 import kingsgambit.model.Direction;
 import kingsgambit.model.event.AttackEvent;
 import kingsgambit.model.event.PieceMoveEvent;
@@ -68,7 +66,7 @@ public class SinglePieceSprite implements PieceSprite {
 	}
 	
 	public Animation takeDamage(int damage, Piece attacker) {
-		final FrameSet hitEffect = AnimationFactory.get("attack_" + attacker.getType().toLowerCase());
+		final FrameSet hitEffect = BattleView.LOADER.getFrames("attack_" + attacker.getType());
 		
 		Animation addEffect = new Animation() {
 			public void stepAhead(int millis) {
@@ -163,7 +161,7 @@ public class SinglePieceSprite implements PieceSprite {
 		this.piece = piece;
 		this.view = view;
 		this.space = space;
-		frames = AnimationFactory.get(piece.getType().toLowerCase());
+		frames = BattleView.LOADER.getFrames(piece.getType());
 		setFrames(piece.getFacing(), Action.STAND);
 		
 		Point center = view.getSquareCenter(piece.getPosition().row, piece.getPosition().column);
@@ -171,7 +169,7 @@ public class SinglePieceSprite implements PieceSprite {
 		y = center.y;
 		space.addSprite(this);
 
-		panicEffect = new StaticSprite("assets/panic.gif");
+		panicEffect = BattleView.LOADER.getStaticSprite("panic.gif");
 		panicEffect.setLocation(x-panicEffect.getWidth()/2, y-frames.getHeight()-panicEffect.getHeight());
 	}
 

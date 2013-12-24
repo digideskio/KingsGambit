@@ -5,12 +5,8 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
-import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedList;
-
-import javax.imageio.ImageIO;
 
 import jmotion.animation.Animation;
 import jmotion.animation.AnimationSequence;
@@ -209,12 +205,7 @@ public class BoardView extends AnimatorPanel implements GameEventHandler {
 	@Override
 	protected void render(Graphics2D g) {
 		// Draw the background
-		Image grass = null;
-		try {
-			grass = ImageIO.read(new File("assets/grass.png"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		Image grass = BattleView.LOADER.readImage("grass.png");
 		for (int col = 0; col<board.getColumns(); col+=2) {
 			for (int row = -1; row<board.getColumns(); row+=2) {
 				Point p = getSquarePosition(row, col);
@@ -231,13 +222,8 @@ public class BoardView extends AnimatorPanel implements GameEventHandler {
 			}
 		}
 
-		Image redHighlight = null;
-		Image blueHighlight = null;
-		try {
-			redHighlight = ImageIO.read(new File("assets/redselector.gif"));
-			blueHighlight = ImageIO.read(new File("assets/blueselector.gif"));
-		} catch (IOException e) {
-		}
+		Image redHighlight = BattleView.LOADER.readImage("redselector.gif");
+		Image blueHighlight = BattleView.LOADER.readImage("blueselector.gif");
 		
 		for (Square s : squareColors.keySet()) {
 			if (squareColors.get(s) == Color.red) {

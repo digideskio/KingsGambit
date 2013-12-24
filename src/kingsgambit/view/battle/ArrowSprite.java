@@ -3,10 +3,6 @@ package kingsgambit.view.battle;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
-import java.io.File;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
 
 import jmotion.sprite.Sprite;
 import kingsgambit.model.Square;
@@ -41,34 +37,25 @@ public class ArrowSprite implements Sprite {
 
 	public ArrowSprite(Square from, Square to, BoardView view) {
 		this.view = view;
-		int numSquares = 1;//from.manhattenDistance(to) + 1;
+		int numSquares = 1; // TODO cleanup this old code, no longer necessary
 		images = new Image[numSquares];
 		positions = new Point[numSquares];
-		try {
-			switch (from.direction(to)) {
-			case NORTH:
-				images[numSquares-1] = ImageIO.read(new File("assets/arrowhead_up.gif"));
-				break;
-			case SOUTH:
-				images[numSquares-1] = ImageIO.read(new File("assets/arrowhead_down.gif"));
-				break;
-			case EAST:
-				images[numSquares-1] = ImageIO.read(new File("assets/arrowhead_right.gif"));
-				break;
-			case WEST:
-				images[numSquares-1] = ImageIO.read(new File("assets/arrowhead_left.gif"));
-				break;
-			}
-			
-			positions[numSquares-1] = centerImage(to);
-			
-			for (int i = 0; i<numSquares-1; ++i) {
-				//positions[i] = centerImage(to.)
-			}
-			
-		} catch (IOException io) {
-			
+		switch (from.direction(to)) {
+		case NORTH:
+			images[numSquares-1] = BattleView.LOADER.readImage("arrowhead_up.gif");
+			break;
+		case SOUTH:
+			images[numSquares-1] = BattleView.LOADER.readImage("arrowhead_down.gif");
+			break;
+		case EAST:
+			images[numSquares-1] = BattleView.LOADER.readImage("arrowhead_right.gif");
+			break;
+		case WEST:
+			images[numSquares-1] = BattleView.LOADER.readImage("arrowhead_left.gif");
+			break;
 		}
+		
+		positions[numSquares-1] = centerImage(to);
 	}
 	
 	private Point centerImage(Square s) {

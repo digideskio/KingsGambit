@@ -6,13 +6,11 @@ import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 
-import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import jmotion.SpriteLoader;
 import jmotion.animation.Animation;
 import jmotion.animation.AnimationSequence;
 import jmotion.animation.FrameSet;
@@ -38,6 +36,8 @@ import kingsgambit.view.Banner;
 import kingsgambit.view.DiceView;
 
 public class BattleView extends JFrame {
+	public static final SpriteLoader LOADER = new SpriteLoader();
+	
 	private static final long serialVersionUID = 1L;
 
 	public Animation animate(GameEvent event) {
@@ -159,24 +159,21 @@ public class BattleView extends JFrame {
 			}
 		});
 		
-		try {
-			BufferedImage yourTurnImg = ImageIO.read(new File("assets/your_turn.gif"));
-			BufferedImage enemyTurnImg = ImageIO.read(new File("assets/enemy_turn.gif"));
+		BufferedImage yourTurnImg = BattleView.LOADER.readImage("your_turn.gif");
+		BufferedImage enemyTurnImg = BattleView.LOADER.readImage("enemy_turn.gif");
 
-			FrameSet yourTurnFrames = new FrameSet(300, 100);
-			FrameSet enemyTurnFrames = new FrameSet(300, 100);
-			for (int i = 0; i<40; ++i) {
-				yourTurnFrames.addFrame(0, yourTurnImg);
-				enemyTurnFrames.addFrame(0, enemyTurnImg);
-			}
-
-			redTurn = new Banner(yourTurnFrames, boardView.getBannerLayer());
-			redTurn.setLocation((boardView.getWidth()-yourTurnFrames.getWidth())/2, 
-					(boardView.getHeight()-yourTurnFrames.getHeight())/2);
-			blueTurn = new Banner(enemyTurnFrames, boardView.getBannerLayer());
-			blueTurn.setLocation(redTurn.getX(), redTurn.getY());
-		} catch (IOException io) {
+		FrameSet yourTurnFrames = new FrameSet(300, 100);
+		FrameSet enemyTurnFrames = new FrameSet(300, 100);
+		for (int i = 0; i<40; ++i) {
+			yourTurnFrames.addFrame(0, yourTurnImg);
+			enemyTurnFrames.addFrame(0, enemyTurnImg);
 		}
+
+		redTurn = new Banner(yourTurnFrames, boardView.getBannerLayer());
+		redTurn.setLocation((boardView.getWidth()-yourTurnFrames.getWidth())/2, 
+				(boardView.getHeight()-yourTurnFrames.getHeight())/2);
+		blueTurn = new Banner(enemyTurnFrames, boardView.getBannerLayer());
+		blueTurn.setLocation(redTurn.getX(), redTurn.getY());
 		
 		if (battle.getConfiguration().requiresPlacementPhase()) {
 			// If this battle configuration requires pieces to be placed,

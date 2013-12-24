@@ -3,15 +3,12 @@ package kingsgambit.view;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.io.File;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
 
 import jmotion.animation.Animation;
 import jmotion.animation.AnimatorPanel;
 import jmotion.animation.ParallelAnimation;
 import kingsgambit.model.WeaponDieFace;
+import kingsgambit.view.battle.BattleView;
 public class DiceView extends AnimatorPanel {
 	private static final long serialVersionUID = 1L;
 	private static final int SWORD = 0;
@@ -77,13 +74,9 @@ public class DiceView extends AnimatorPanel {
 			this.x = x;
 			this.y = y;
 			images = new Image[3];
-			try {
-				images[SWORD] = ImageIO.read(new File("assets/roll sword.png"));
-				images[BOW] = ImageIO.read(new File("assets/roll bow.png"));
-				images[PANIC] = ImageIO.read(new File("assets/roll panic.png"));
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			images[SWORD] = BattleView.LOADER.readImage("roll sword.png");
+			images[BOW] = BattleView.LOADER.readImage("roll bow.png");
+			images[PANIC] = BattleView.LOADER.readImage("roll panic.png");
 			face = BLANK;
 		}
 		

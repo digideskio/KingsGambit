@@ -15,7 +15,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListCellRenderer;
 
-import jmotion.AnimationFactory;
 import jmotion.animation.FrameSet;
 import kingsgambit.model.Faction;
 import kingsgambit.model.battle.BattleConfiguration;
@@ -68,7 +67,7 @@ public class PlacePiecesPanel extends JPanel {
 
 	private class PieceRenderer implements ListCellRenderer<Piece> {
 		public Component getListCellRendererComponent(JList<? extends Piece> list, Piece value, int index, boolean isSelected, boolean cellHasFocus) {
-			FrameSet f = AnimationFactory.get(value.getType().toLowerCase());
+			FrameSet f = BattleView.LOADER.getFrames(value.getType());
 			f.setSequence(8);
 			
 			JPanel panel = new JPanel();
