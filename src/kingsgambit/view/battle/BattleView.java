@@ -26,6 +26,7 @@ import kingsgambit.model.battle.BoardRegion;
 import kingsgambit.model.command.Command;
 import kingsgambit.model.command.FactionReadyCommand;
 import kingsgambit.model.command.PlacePieceCommand;
+import kingsgambit.model.command.UnplacePieceCommand;
 import kingsgambit.model.event.AttackEvent;
 import kingsgambit.model.event.BattleBeginEvent;
 import kingsgambit.model.event.BeginTurnEvent;
@@ -192,10 +193,7 @@ public class BattleView extends JFrame {
 	
 	private void preparePlacement(Faction f) {
 		BattleConfiguration config = controller.getBattle().getConfiguration();
-		if (f == Faction.BLUE)
-			boardView.setShroud(config.getBlueRegion().getComplement());
-		else
-			boardView.setShroud(config.getRedRegion().getComplement());
+		boardView.setShroud(config.getRegion(f).getComplement());
 		
 		placingFor = f;
 		placePieces = new PlacePiecesPanel(this, config, f);
@@ -344,16 +342,23 @@ public class BattleView extends JFrame {
 		}
 		
 		public void squareClicked(Square s) {
+			BattleConfiguration config = battle.getConfiguration();
 			Board board = battle.getBoard();
-			if (placePieces.hasMorePieces() && board.containsSquare(s) && !board.hasPieceAt(s)) {
-				BattleConfiguration config = battle.getConfiguration();
-				
-				if ((placingFor == Faction.RED && config.getRedRegion().contains(s))
-						|| (placingFor == Faction.BLUE && config.getBlueRegion().contains(s))) {
-					Piece piece = placePieces.getSelected();
-					placePieces.placePiece();
-					controller.executeCommand(new PlacePieceCommand(piece, s));
+			
+			if (!config.getRegion(placingFor).contains(s) || !board.containsSquare(s))
+				return;
+			
+			if (board.hasPieceAt(s)) {
+				Piece clicked = board.getPieceAt(s);
+				if (!clicked.getType().equals("King")) {
+					// TODO - this logic should check if the piece was in the initial conditions.
+					placePieces.unplacePiece(clicked);
+					controller.executeCommand(new UnplacePieceCommand(clicked, s));
 				}
+			} else if (placePieces.hasMorePieces()) {
+				Piece piece = placePieces.getSelected();
+				placePieces.placePiece();
+				controller.executeCommand(new PlacePieceCommand(piece, s));
 			}
 		}
 		

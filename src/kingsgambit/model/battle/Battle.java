@@ -15,6 +15,7 @@ import kingsgambit.model.command.FactionReadyCommand;
 import kingsgambit.model.command.MovePieceCommand;
 import kingsgambit.model.command.PlacePieceCommand;
 import kingsgambit.model.command.TurnPieceCommand;
+import kingsgambit.model.command.UnplacePieceCommand;
 import kingsgambit.model.event.AttackEvent;
 import kingsgambit.model.event.BattleBeginEvent;
 import kingsgambit.model.event.BeginTurnEvent;
@@ -23,6 +24,7 @@ import kingsgambit.model.event.GameOverEvent;
 import kingsgambit.model.event.PieceMoveEvent;
 import kingsgambit.model.event.PiecePlaceEvent;
 import kingsgambit.model.event.PieceTurnEvent;
+import kingsgambit.model.event.PieceUnplacedEvent;
 import kingsgambit.model.event.RetreatEvent;
 import kingsgambit.model.piece.Piece;
 import kingsgambit.model.piece.PieceProperty;
@@ -107,6 +109,14 @@ public class Battle implements CommandExecutor {
 		board.addPiece(p);
 		
 		controller.handle(new PiecePlaceEvent(p));
+	}
+	
+	@Override
+	public void execute(UnplacePieceCommand c) {
+		Piece p = c.getPiece();
+		board.removePiece(p);
+		
+		controller.handle(new PieceUnplacedEvent(p));
 	}
 	
 	@Override

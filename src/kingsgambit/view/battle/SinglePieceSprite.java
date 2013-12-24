@@ -29,6 +29,10 @@ public class SinglePieceSprite implements PieceSprite {
 		return piece;
 	}
 
+	public void removeAllSprites() {
+		space.removeSprite(this);
+	}
+
 	public Animation animate(PieceMoveEvent event) {
 		Point center = view.getSquareCenter(event.to.row, event.to.column);
 		Point destination = new Point(center.x + xDisplacement, center.y + yDisplacement);

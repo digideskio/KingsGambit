@@ -2,6 +2,7 @@ package kingsgambit.model.battle;
 
 import java.util.List;
 
+import kingsgambit.model.Faction;
 import kingsgambit.model.piece.Piece;
 
 public class BattleConfiguration {
@@ -12,16 +13,16 @@ public class BattleConfiguration {
 	public Iterable<Piece> getInitialPieces() {
 		return initial;
 	}
-	public List<Piece> getRedOptions() {
-		return redOptions;
-	}
-	public List<Piece> getBlueOptions() {
+	
+	public List<Piece> getOptions(Faction f) {
+		if (f == Faction.RED)
+			return redOptions;
 		return blueOptions;
 	}
-	public BoardRegion getRedRegion() {
-		return redPlacementRegion;
-	}
-	public BoardRegion getBlueRegion() {
+	
+	public BoardRegion getRegion(Faction f) {
+		if (f == Faction.RED)
+			return redPlacementRegion;
 		return bluePlacementRegion;
 	}
 	

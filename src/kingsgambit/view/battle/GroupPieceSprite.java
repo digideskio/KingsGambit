@@ -19,6 +19,13 @@ public class GroupPieceSprite implements PieceSprite {
 				sprites[i].render(g);
 		}
 	}
+	
+	public void removeAllSprites() {
+		for (int i = 0; i<sprites.length; ++i) {
+			if (alive[i])
+				sprites[i].removeAllSprites();
+		}
+	}
 
 	public Piece getPiece() {
 		return piece;

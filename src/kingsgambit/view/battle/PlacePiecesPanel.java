@@ -38,17 +38,16 @@ public class PlacePiecesPanel extends JPanel {
 		model.removeElementAt(selected);
 		toPlace.setSelectedIndex(Math.max(0, Math.min(selected, model.size()-1)));
 	}
+	
+	public void unplacePiece(Piece p) {
+		model.addElement(p);
+	}
 
 	public PlacePiecesPanel(final BattleView view, BattleConfiguration config, final Faction faction) {
 		setPreferredSize(new Dimension(200, 600));
 		model = new DefaultListModel<>();
-		if (faction == Faction.RED) {
-			for (Piece p : config.getRedOptions())
-				model.addElement(p);
-		} else {
-			for (Piece p : config.getBlueOptions())
-				model.addElement(p);
-		}
+		for (Piece p : config.getOptions(faction))
+			model.addElement(p);
 
 		toPlace = new JList<>(model);
 		toPlace.setCellRenderer(new PieceRenderer());

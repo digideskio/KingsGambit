@@ -6,12 +6,10 @@ import java.util.Comparator;
 import java.util.List;
 
 import kingsgambit.controller.BattleController;
-import kingsgambit.model.Faction;
 import kingsgambit.model.Player;
 import kingsgambit.model.Square;
 import kingsgambit.model.battle.BattleConfiguration;
 import kingsgambit.model.battle.Board;
-import kingsgambit.model.battle.BoardRegion;
 import kingsgambit.model.command.AttackPieceCommand;
 import kingsgambit.model.command.Command;
 import kingsgambit.model.command.MovePieceCommand;
@@ -48,16 +46,10 @@ public class SimpleAI extends BaseAI {
 		return allCommands.get(0);
 	}
 	
-	protected void placePieces(BattleConfiguration config) {
-		BoardRegion myRegion = player.faction == Faction.RED
-				? config.getRedRegion()
-				: config.getBlueRegion();
+	protected void placePieces(BattleConfiguration config) {		
+		List<Piece> myPieces = config.getOptions(player.faction);
 		
-		List<Piece> myPieces = player.faction == Faction.RED
-				? config.getRedOptions()
-				: config.getBlueOptions();
-		
-		for (Square s : myRegion) {
+		for (Square s : config.getRegion(player.faction)) {
 			if (!controller.getBattle().getBoard().hasPieceAt(s)) {
 				Piece randomPiece = getRandomPiece(myPieces);
 				controller.executeCommand(new PlacePieceCommand(randomPiece, s));

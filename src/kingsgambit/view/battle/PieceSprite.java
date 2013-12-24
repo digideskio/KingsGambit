@@ -17,4 +17,5 @@ public interface PieceSprite extends Sprite {
 	public Animation takeDamage(int damage, Piece attacker);
 	public Animation die();
 	public void pieceUpdated();
+	public void removeAllSprites();
 }

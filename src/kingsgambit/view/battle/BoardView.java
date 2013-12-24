@@ -35,6 +35,7 @@ import kingsgambit.model.event.GameOverEvent;
 import kingsgambit.model.event.PieceMoveEvent;
 import kingsgambit.model.event.PiecePlaceEvent;
 import kingsgambit.model.event.PieceTurnEvent;
+import kingsgambit.model.event.PieceUnplacedEvent;
 import kingsgambit.model.event.RetreatEvent;
 import kingsgambit.model.piece.Piece;
 
@@ -107,6 +108,13 @@ public class BoardView extends AnimatorPanel implements GameEventHandler {
 		} else {
 			pieceSprites.put(p, PieceSpriteFactory.createSprite(p, this, pieceLayer));
 		}
+	}
+	
+	public void handle(PieceUnplacedEvent event) {
+		Piece p = event.getPiece();
+		PieceSprite sprite = pieceSprites.get(p);
+		sprite.removeAllSprites();
+		pieceSprites.remove(p);
 	}
 	
 	public void previewCommand(Command c) {
