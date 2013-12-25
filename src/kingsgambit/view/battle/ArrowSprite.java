@@ -5,15 +5,20 @@ import java.awt.Image;
 import java.awt.Point;
 
 import jmotion.sprite.Sprite;
+import kingsgambit.model.Direction;
 import kingsgambit.model.Square;
 
 public class ArrowSprite implements Sprite {
 
+	private static final Image[] arrowheads = new Image[4];
+	
+	static {
+		for (Direction d : Direction.values())
+			arrowheads[d.ordinal()] = BattleView.LOADER.readImage("arrowhead_" +d.toString().toLowerCase() + ".gif");
+	}
+	
 	public void render(Graphics2D g) {
-		for (int i = 0; i<images.length; ++i) {
-			Point pos = positions[i];
-			g.drawImage(images[i], pos.x, pos.y, null);
-		}
+		g.drawImage(arrowheads[direction.ordinal()], position.x, position.y, null);
 	}
 
 	public void setLocation(int x, int y) {
@@ -37,25 +42,8 @@ public class ArrowSprite implements Sprite {
 
 	public ArrowSprite(Square from, Square to, BoardView view) {
 		this.view = view;
-		int numSquares = 1; // TODO cleanup this old code, no longer necessary
-		images = new Image[numSquares];
-		positions = new Point[numSquares];
-		switch (from.direction(to)) {
-		case NORTH:
-			images[numSquares-1] = BattleView.LOADER.readImage("arrowhead_up.gif");
-			break;
-		case SOUTH:
-			images[numSquares-1] = BattleView.LOADER.readImage("arrowhead_down.gif");
-			break;
-		case EAST:
-			images[numSquares-1] = BattleView.LOADER.readImage("arrowhead_right.gif");
-			break;
-		case WEST:
-			images[numSquares-1] = BattleView.LOADER.readImage("arrowhead_left.gif");
-			break;
-		}
-		
-		positions[numSquares-1] = centerImage(to);
+		direction = from.direction(to);
+		position = centerImage(to);
 	}
 	
 	private Point centerImage(Square s) {
@@ -64,6 +52,6 @@ public class ArrowSprite implements Sprite {
 	}
 	
 	private BoardView view;
-	private Image[] images;
-	private Point[] positions;
+	private Point position;
+	private Direction direction;
 }

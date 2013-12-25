@@ -182,6 +182,10 @@ public class BoardView extends AnimatorPanel implements GameEventHandler {
 		squareColors = new HashMap<Square, Color>();
 		shroud = BoardRegion.getFullRegion().getComplement();
 		
+		grassTile = BattleView.LOADER.readImage("grass.png");
+		redHighlight = BattleView.LOADER.readImage("redselector.gif");
+		blueHighlight = BattleView.LOADER.readImage("blueselector.gif");
+		
 		for (Piece p : board.getPieces())
 			pieceSprites.put(p, PieceSpriteFactory.createSprite(p, this, pieceLayer));
 		
@@ -205,11 +209,10 @@ public class BoardView extends AnimatorPanel implements GameEventHandler {
 	@Override
 	protected void render(Graphics2D g) {
 		// Draw the background
-		Image grass = BattleView.LOADER.readImage("grass.png");
 		for (int col = 0; col<board.getColumns(); col+=2) {
 			for (int row = -1; row<board.getColumns(); row+=2) {
 				Point p = getSquarePosition(row, col);
-				g.drawImage(grass, p.x, p.y, null);
+				g.drawImage(grassTile, p.x, p.y, null);
 			}
 		}
 		
@@ -222,9 +225,6 @@ public class BoardView extends AnimatorPanel implements GameEventHandler {
 			}
 		}
 
-		Image redHighlight = BattleView.LOADER.readImage("redselector.gif");
-		Image blueHighlight = BattleView.LOADER.readImage("blueselector.gif");
-		
 		for (Square s : squareColors.keySet()) {
 			if (squareColors.get(s) == Color.red) {
 				Point p = getSquarePosition(s.row, s.column);
@@ -232,8 +232,6 @@ public class BoardView extends AnimatorPanel implements GameEventHandler {
 			} else if (squareColors.get(s) == Color.blue) {
 				Point p = getSquarePosition(s.row, s.column);
 				g.drawImage(blueHighlight, p.x, p.y, null);
-			} else {
-				//outlineSquare(s, squareColors.get(s), g);
 			}
 		}
 
@@ -262,6 +260,9 @@ public class BoardView extends AnimatorPanel implements GameEventHandler {
 	private SpriteLayer indicatorLayer;
 	private SpriteSpace pieceLayer;
 	private SpriteLayer bannerLayer;
+	private Image grassTile;
+	private Image redHighlight;
+	private Image blueHighlight;
 	
 	private HashMap<Piece, PieceSprite> pieceSprites;
 	private HashMap<Square, Color> squareColors;

@@ -70,8 +70,12 @@ public class BattleView extends JFrame {
 			boardView.addAnimation(a);
 			return a;
 		} else if (event instanceof BeginTurnEvent) {
+			BeginTurnEvent beginTurn = (BeginTurnEvent)event;
+			turnDetails.setTurn(beginTurn.faction);
+			
+			// Display a banner indicating whos turn it is
 			Animation banner;
-			if (((BeginTurnEvent)event).faction == Faction.BLUE) {
+			if (beginTurn.faction == Faction.BLUE) {
 				state = controlBlue ? UNSELECTED : ENEMY_TURN;
 				banner = blueTurn.displayAndPlay();
 			} else {
@@ -130,16 +134,20 @@ public class BattleView extends JFrame {
 		this.controlBlue = controlBlue;
 		this.controlRed = controlRed;
 		battle = controller.getBattle();
+		
 		boardView = new BoardView(controller.getBattle().getBoard(), this);
 		JPanel boardFrame = new JPanel();
 		boardFrame.add(boardView);
 		diceView = new DiceView();
+		turnDetails = new TurnDetails();
+		
 		state = ENEMY_TURN;
 
 		setSize(900, 800);
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(new BorderLayout());
 		getContentPane().add(boardFrame, BorderLayout.CENTER);
+		getContentPane().add(turnDetails, BorderLayout.NORTH);
 		
 		setVisible(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -402,6 +410,7 @@ public class BattleView extends JFrame {
 	private BoardView boardView;
 	private DiceView diceView;
 	private PlacePiecesPanel placePieces;
+	private TurnDetails turnDetails;
 	
 	private Banner redTurn;
 	private Banner blueTurn;
