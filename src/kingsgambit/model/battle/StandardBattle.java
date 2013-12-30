@@ -70,6 +70,6 @@ public class StandardBattle extends BattleType {
 	}
 	
 	public StandardBattle() {
-		super("Stanard Battle", "Fight against an opponent with basic army");
+		super("Standard Battle", "Fight against an opponent with basic army");
 	}
 }
