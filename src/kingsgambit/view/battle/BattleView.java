@@ -10,10 +10,10 @@ import java.awt.image.BufferedImage;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import jmotion.SpriteLoader;
 import jmotion.animation.Animation;
 import jmotion.animation.AnimationSequence;
 import jmotion.animation.FrameSet;
+import jmotion.construction.SpriteLoader;
 import kingsgambit.controller.BattleController;
 import kingsgambit.model.Faction;
 import kingsgambit.model.Player;
@@ -36,7 +36,7 @@ import kingsgambit.view.Banner;
 import kingsgambit.view.DiceView;
 
 public class BattleView extends JFrame {
-	public static final SpriteLoader LOADER = new SpriteLoader();
+	public static final SpriteLoader LOADER = new SpriteLoader("assets");
 	
 	private static final long serialVersionUID = 1L;
 
